@@ -46,7 +46,15 @@ exports.connect = function connect(req, res) {
   if (req.params?.host) {
     if (
       validator.isIP(`${req.params.host}`) ||
-      validator.isFQDN(req.params.host) ||
+      // Using defaults, with underscores allowed
+      validator.isFQDN(req.params.host, {
+        require_tld: true,
+        allow_underscores: true,
+        allow_trailing_dot: false,
+        allow_numeric_tld: false,
+        allow_wildcard: false,
+        ignore_max_length: false,
+      }) ||
       /^(([a-z]|[A-Z]|\d|[!^(){}\-_~])+)?\w$/.test(req.params.host)
     ) {
       host = req.params.host;
